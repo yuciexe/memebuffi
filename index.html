@@ -18,10 +18,26 @@ body{
     overflow:hidden;
 }
 
-#start{
-    font-size:2em;
+#overlay{
     text-align:center;
     cursor:pointer;
+}
+
+#title{
+    font-size:2em;
+}
+
+#sub{
+    font-size:1em;
+    opacity:0.7;
+    margin-top:10px;
+    animation:blink 1s infinite;
+}
+
+@keyframes blink{
+    0%{opacity:0.3;}
+    50%{opacity:1;}
+    100%{opacity:0.3;}
 }
 
 #videoBox{
@@ -39,8 +55,9 @@ video{
 </head>
 <body>
 
-<div id="start">
-😺 Tocca per avviare il meme
+<div id="overlay">
+    <div id="title">😺 Slip caricamento meme</div>
+    <div id="sub">Tocca lo schermo per continuare</div>
 </div>
 
 <div id="videoBox">
@@ -50,30 +67,33 @@ video{
 </div>
 
 <script>
-const start = document.getElementById("start");
+const overlay = document.getElementById("overlay");
 const box = document.getElementById("videoBox");
 const video = document.getElementById("jumpscare");
 
-start.addEventListener("click", async () => {
+overlay.addEventListener("click", async () => {
 
-    // sblocca audio su Chrome
-    video.volume = 1.0;
-    await video.play().catch(()=>{});
+    // nascondi subito UI
+    overlay.style.display = "none";
+
+    // mostra video
+    box.style.display = "block";
 
     // vibrazione
     if (navigator.vibrate) {
-        navigator.vibrate(150);
+        navigator.vibrate(200);
     }
 
-    // piccolo delay effetto “caricamento”
-    setTimeout(() => {
-        start.style.display = "none";
-        box.style.display = "block";
+    // audio massimo
+    video.volume = 1.0;
 
+    await video.play().catch(()=>{});
+
+    // effetto delay jumpscare
+    setTimeout(() => {
         video.currentTime = 0;
         video.play();
-
-    }, 250);
+    }, 1000);
 
 });
 </script>
